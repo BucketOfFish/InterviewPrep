@@ -16,10 +16,14 @@ private:
     };
     LinkedList::LinkedListNode *head = nullptr;
     LinkedList::LinkedListNode *tail = nullptr;
+    int m_size = 0;
 public:
     void append(int value);
-    void remove();
+    void remove_head();
+    void remove_tail();
     void print();
-    bool is_empty();
+    bool empty();
     void swap();
+    int size();
+    int tail_value();
 };

@@ -19,14 +19,26 @@ void LinkedList::append(int value) {
         last_node = last_node->next;
         tail = last_node;
     }
+    m_size++;
 }
 
-void LinkedList::remove() {
-    if (head == nullptr) return;
+void LinkedList::remove_head() {
+    if (head == nullptr) {
+        cout << "WARNING: no values in linked list" << endl;
+        return;
+    }
+    head = head->next;
+    m_size--;
+}
+
+void LinkedList::remove_tail() {
+    if (head == nullptr) {
+        cout << "WARNING: no values in linked list" << endl;
+        return;
+    }
     if (head->next == nullptr) {
         head = nullptr;
         tail = nullptr;
-        return;
     }
     else {
         LinkedList::LinkedListNode *last_node = head;
@@ -37,6 +49,7 @@ void LinkedList::remove() {
         last_node->remove_next();
         tail = last_node;
     }
+    m_size--;
 }
 
 void LinkedList::print() {
@@ -49,17 +62,29 @@ void LinkedList::print() {
     cout << endl;
 }
 
-bool LinkedList::is_empty() {
+bool LinkedList::empty() {
     return head == nullptr;
 }
 
 void LinkedList::swap() {
-    head = tail;
-    LinkedListNode *last_node = head;
+    LinkedListNode *last_node = tail;
     while (last_node->previous != nullptr) {
-        last_node = last_node->previous;
-        LinkedList::append(last_node->value);
+        LinkedListNode *temp_node = last_node->next;
+        last_node->next = last_node->previous;
+        last_node->previous = temp_node;
+        last_node = last_node->next;
     }
+    head = tail;
+    tail = last_node;
+    tail->next = nullptr;
+}
+
+int LinkedList::size() {
+    return m_size;
+}
+
+int LinkedList::tail_value() {
+    return tail->value;
 }
 
 //-------------------------------
@@ -83,24 +108,37 @@ void LinkedList::LinkedListNode::remove_next() {
 }
 
 //-----
-// Main
+// Test
 //-----
 
-int main() {
+int test() {
     LinkedList my_list;
     vector<int> my_values {3, 5, 2, 6, 7, 5};
+
     for (int value : my_values) {
         my_list.append(value);
         my_list.print();
     }
-    while (!my_list.is_empty()) {
-        my_list.remove();
+    while (!my_list.empty()) {
+        my_list.remove_tail();
         my_list.print();
     }
+
+    for (int value : my_values) {
+        my_list.append(value);
+    }
+    while (!my_list.empty()) {
+        my_list.remove_head();
+        my_list.print();
+    }
+
     for (int value : my_values) {
         my_list.append(value);
     }
     my_list.swap();
     my_list.print();
+
+    cout << my_list.tail_value() << endl;
+
     return 0;
 }
