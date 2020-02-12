@@ -13,7 +13,7 @@ int Stack::size() {
 }
 
 void Stack::push(int new_value) {
-    stack.append(new_value);
+    stack.append_tail(new_value);
 }
 
 int Stack::pop() {
@@ -38,7 +38,7 @@ void Stack::print() {
 // Test
 //-----
 
-int main() {
+int test() {
     Stack my_stack;
     vector<int> my_values {8, 12, 2, -4, 0, 2};
 

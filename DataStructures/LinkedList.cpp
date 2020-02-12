@@ -4,52 +4,59 @@
 // LinkedList class functions
 //---------------------------
 
-void LinkedList::append(int value) {
+void LinkedList::append_head(int value) {
     if (head == nullptr) {
         head = new LinkedListNode(value);
         tail = head;
     }
     else {
-        LinkedListNode *last_node = head;
-        while (last_node->next != nullptr) {
-            last_node = last_node->next;
-        }
-        last_node->set_next(new LinkedListNode(value));
-        last_node->next->set_previous(last_node);
-        last_node = last_node->next;
-        tail = last_node;
+        head->set_previous(new LinkedListNode(value));
+        head->previous->set_next(head);
+        head = head->previous;
     }
     m_size++;
 }
 
-void LinkedList::remove_head() {
+void LinkedList::append_tail(int value) {
     if (head == nullptr) {
-        cout << "WARNING: no values in linked list" << endl;
-        return;
+        head = new LinkedListNode(value);
+        tail = head;
     }
-    head = head->next;
-    m_size--;
+    else {
+        tail->set_next(new LinkedListNode(value));
+        tail->next->set_previous(tail);
+        tail = tail->next;
+    }
+    m_size++;
 }
 
-void LinkedList::remove_tail() {
+int LinkedList::remove_head() {
     if (head == nullptr) {
         cout << "WARNING: no values in linked list" << endl;
-        return;
+        return -1;
     }
-    if (head->next == nullptr) {
+    int return_value = head->value;
+    head = head->next;
+    m_size--;
+    return return_value;
+}
+
+int LinkedList::remove_tail() {
+    if (head == nullptr) {
+        cout << "WARNING: no values in linked list" << endl;
+        return -1;
+    }
+    int return_value = tail->value;
+    if (head == tail) {
         head = nullptr;
         tail = nullptr;
     }
     else {
-        LinkedList::LinkedListNode *last_node = head;
-        while (last_node->next != nullptr) {
-            last_node = last_node->next;
-        }
-        last_node = last_node->previous;
-        last_node->remove_next();
-        tail = last_node;
+        tail->previous->remove_next();
+        tail = tail->previous;
     }
     m_size--;
+    return return_value;
 }
 
 void LinkedList::print() {
@@ -81,6 +88,10 @@ void LinkedList::swap() {
 
 int LinkedList::size() {
     return m_size;
+}
+
+int LinkedList::head_value() {
+    return head->value;
 }
 
 int LinkedList::tail_value() {
@@ -115,8 +126,9 @@ int test() {
     LinkedList my_list;
     vector<int> my_values {3, 5, 2, 6, 7, 5};
 
+    // check append_tail and remove_tail
     for (int value : my_values) {
-        my_list.append(value);
+        my_list.append_tail(value);
         my_list.print();
     }
     while (!my_list.empty()) {
@@ -124,20 +136,25 @@ int test() {
         my_list.print();
     }
 
+    // check append_head and remove_head
     for (int value : my_values) {
-        my_list.append(value);
+        my_list.append_head(value);
+        my_list.print();
     }
     while (!my_list.empty()) {
         my_list.remove_head();
         my_list.print();
     }
 
+    // check swap
     for (int value : my_values) {
-        my_list.append(value);
+        my_list.append_tail(value);
     }
     my_list.swap();
     my_list.print();
 
+    // check peeks
+    cout << my_list.head_value() << endl;
     cout << my_list.tail_value() << endl;
 
     return 0;

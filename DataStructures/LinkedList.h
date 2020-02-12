@@ -18,12 +18,14 @@ private:
     LinkedList::LinkedListNode *tail = nullptr;
     int m_size = 0;
 public:
-    void append(int value);
-    void remove_head();
-    void remove_tail();
+    void append_head(int value);
+    void append_tail(int value);
+    int remove_head();
+    int remove_tail();
     void print();
     bool empty();
     void swap();
     int size();
+    int head_value();
     int tail_value();
 };
